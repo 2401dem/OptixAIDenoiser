@@ -1,0 +1,1 @@
+cv::Mat denoise_impl(const cv::Mat & beauty, const bool useAlbedo, const cv::Mat & albedo, const bool useNormal, const cv::Mat & normal, const float blend, const unsigned hdr, const bool rebuild);
