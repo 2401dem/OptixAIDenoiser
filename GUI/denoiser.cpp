@@ -32,7 +32,6 @@ void createContext(const int width, const int height, const float blend, const u
 
 	denoiserStage->declareVariable("blend")->setFloat(blend);
 	denoiserStage->declareVariable("hdr")->setUint(hdr);
-
 	
 	commandList = optix_context->createCommandList();
 	// Add the denoiser to the new optix command list	
@@ -44,25 +43,17 @@ void createContext(const int width, const int height, const float blend, const u
 
 }
 
+#define DESTROY(X) if (X) { X->destroy(); }
+
 void destroy()
 {
-	
-	if (denoiserStage)
-		denoiserStage->destroy();
-	if (commandList)
-		commandList->destroy();
-	if (input_buffer)
-		input_buffer->destroy();
-	if (output_buffer)
-		output_buffer->destroy();
-	if (albedo_buffer)
-		albedo_buffer->destroy();
-	if (normal_buffer)
-		normal_buffer->destroy();
-	if (optix_context)
-	{
-		optix_context->destroy();
-	}
+	DESTROY(denoiserStage);
+	DESTROY(commandList);
+	DESTROY(input_buffer);
+	DESTROY(output_buffer);
+	DESTROY(normal_buffer);
+	DESTROY(albedo_buffer);
+	DESTROY(optix_context);
 }
 
 Mat denoise_impl(const Mat & beauty, const bool useAlbedo, const cv::Mat & albedo, const bool useNormal, const Mat & normal, const float blend, const unsigned hdr, const bool rebuild)

@@ -34,7 +34,7 @@ namespace GUI
 
 	private: array<TextBox^>^ textBoxes;
 	private: array<String^>^ paths;
-	private: System::Windows::Forms::Panel^  panel1;
+
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::TextBox^  textBox1;
 	private: System::Windows::Forms::CheckBox^  checkBox1;
@@ -56,8 +56,11 @@ namespace GUI
 	private: System::Windows::Forms::Button^  button5;
 	private: System::Windows::Forms::Button^  button6;
 	private: System::Windows::Forms::SaveFileDialog^  saveFileDialog1;
-	private: System::Windows::Forms::FolderBrowserDialog^  folderBrowserDialog1;
 
+	private: System::Windows::Forms::CheckBox^  checkBox5;
+	private: System::Windows::Forms::Panel^  panel1;
+	private: System::Windows::Forms::PictureBox^  pictureBox1;
+	private: System::Windows::Forms::Button^  Show;
 
 	private: System::Windows::Forms::OpenFileDialog^  openFileDialog1;
 
@@ -72,10 +75,11 @@ namespace GUI
 
 			textBoxes = gcnew array<TextBox^>{textBox1, textBox2, textBox3, textBox4};
 			paths = gcnew array<String^>{ "test.png" , "albedo.png" , "normal.png", "test_out.png" };
-			cv::namedWindow("view", cv::WINDOW_AUTOSIZE);
+			cv::namedWindow("view", cv::WINDOW_NORMAL);
+			cv::resizeWindow("view", 1024, 576);
 			HWND hCV = HWND(cvGetWindowHandle("view"));
 			HWND hParent = ::GetParent(hCV);
-			SetParent(hCV, (HWND)(void*)(panel1->Handle));
+			SetParent(hCV, (HWND)(void*)(pictureBox1->Handle));
 			ShowWindow(hParent, SW_HIDE);	
 		}
 
@@ -105,7 +109,6 @@ namespace GUI
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->button1 = (gcnew System::Windows::Forms::Button());
@@ -128,25 +131,20 @@ namespace GUI
 			this->button6 = (gcnew System::Windows::Forms::Button());
 			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->saveFileDialog1 = (gcnew System::Windows::Forms::SaveFileDialog());
-			this->folderBrowserDialog1 = (gcnew System::Windows::Forms::FolderBrowserDialog());
+			this->checkBox5 = (gcnew System::Windows::Forms::CheckBox());
+			this->panel1 = (gcnew System::Windows::Forms::Panel());
+			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
+			this->Show = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown1))->BeginInit();
+			this->panel1->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			this->SuspendLayout();
-			// 
-			// panel1
-			// 
-			this->panel1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
-			this->panel1->AutoScroll = true;
-			this->panel1->AutoScrollMinSize = System::Drawing::Size(720, 720);
-			this->panel1->Location = System::Drawing::Point(304, 0);
-			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(720, 720);
-			this->panel1->TabIndex = 0;
 			// 
 			// label1
 			// 
 			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(40, 46);
+			this->label1->Location = System::Drawing::Point(34, 16);
 			this->label1->Name = L"label1";
 			this->label1->Size = System::Drawing::Size(83, 12);
 			this->label1->TabIndex = 1;
@@ -154,7 +152,7 @@ namespace GUI
 			// 
 			// textBox1
 			// 
-			this->textBox1->Location = System::Drawing::Point(42, 61);
+			this->textBox1->Location = System::Drawing::Point(36, 31);
 			this->textBox1->Name = L"textBox1";
 			this->textBox1->Size = System::Drawing::Size(142, 21);
 			this->textBox1->TabIndex = 2;
@@ -162,7 +160,7 @@ namespace GUI
 			// 
 			// button1
 			// 
-			this->button1->Location = System::Drawing::Point(190, 60);
+			this->button1->Location = System::Drawing::Point(184, 30);
 			this->button1->Name = L"button1";
 			this->button1->Size = System::Drawing::Size(75, 23);
 			this->button1->TabIndex = 3;
@@ -173,7 +171,7 @@ namespace GUI
 			// checkBox1
 			// 
 			this->checkBox1->AutoSize = true;
-			this->checkBox1->Location = System::Drawing::Point(24, 102);
+			this->checkBox1->Location = System::Drawing::Point(18, 89);
 			this->checkBox1->Name = L"checkBox1";
 			this->checkBox1->Size = System::Drawing::Size(108, 16);
 			this->checkBox1->TabIndex = 4;
@@ -184,7 +182,7 @@ namespace GUI
 			// button2
 			// 
 			this->button2->Enabled = false;
-			this->button2->Location = System::Drawing::Point(190, 123);
+			this->button2->Location = System::Drawing::Point(184, 110);
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(75, 23);
 			this->button2->TabIndex = 6;
@@ -195,7 +193,7 @@ namespace GUI
 			// textBox2
 			// 
 			this->textBox2->Enabled = false;
-			this->textBox2->Location = System::Drawing::Point(42, 124);
+			this->textBox2->Location = System::Drawing::Point(36, 111);
 			this->textBox2->Name = L"textBox2";
 			this->textBox2->Size = System::Drawing::Size(142, 21);
 			this->textBox2->TabIndex = 5;
@@ -204,7 +202,7 @@ namespace GUI
 			// button3
 			// 
 			this->button3->Enabled = false;
-			this->button3->Location = System::Drawing::Point(190, 186);
+			this->button3->Location = System::Drawing::Point(184, 169);
 			this->button3->Name = L"button3";
 			this->button3->Size = System::Drawing::Size(75, 23);
 			this->button3->TabIndex = 9;
@@ -215,7 +213,7 @@ namespace GUI
 			// textBox3
 			// 
 			this->textBox3->Enabled = false;
-			this->textBox3->Location = System::Drawing::Point(42, 187);
+			this->textBox3->Location = System::Drawing::Point(36, 170);
 			this->textBox3->Name = L"textBox3";
 			this->textBox3->Size = System::Drawing::Size(142, 21);
 			this->textBox3->TabIndex = 8;
@@ -224,7 +222,7 @@ namespace GUI
 			// checkBox2
 			// 
 			this->checkBox2->AutoSize = true;
-			this->checkBox2->Location = System::Drawing::Point(24, 165);
+			this->checkBox2->Location = System::Drawing::Point(18, 148);
 			this->checkBox2->Name = L"checkBox2";
 			this->checkBox2->Size = System::Drawing::Size(108, 16);
 			this->checkBox2->TabIndex = 7;
@@ -234,7 +232,7 @@ namespace GUI
 			// 
 			// button4
 			// 
-			this->button4->Location = System::Drawing::Point(190, 256);
+			this->button4->Location = System::Drawing::Point(184, 226);
 			this->button4->Name = L"button4";
 			this->button4->Size = System::Drawing::Size(75, 23);
 			this->button4->TabIndex = 12;
@@ -244,7 +242,7 @@ namespace GUI
 			// 
 			// textBox4
 			// 
-			this->textBox4->Location = System::Drawing::Point(42, 257);
+			this->textBox4->Location = System::Drawing::Point(36, 227);
 			this->textBox4->Name = L"textBox4";
 			this->textBox4->Size = System::Drawing::Size(142, 21);
 			this->textBox4->TabIndex = 11;
@@ -253,7 +251,7 @@ namespace GUI
 			// label2
 			// 
 			this->label2->AutoSize = true;
-			this->label2->Location = System::Drawing::Point(40, 242);
+			this->label2->Location = System::Drawing::Point(34, 212);
 			this->label2->Name = L"label2";
 			this->label2->Size = System::Drawing::Size(89, 12);
 			this->label2->TabIndex = 10;
@@ -262,7 +260,7 @@ namespace GUI
 			// checkBox3
 			// 
 			this->checkBox3->AutoSize = true;
-			this->checkBox3->Location = System::Drawing::Point(100, 314);
+			this->checkBox3->Location = System::Drawing::Point(94, 284);
 			this->checkBox3->Name = L"checkBox3";
 			this->checkBox3->Size = System::Drawing::Size(84, 16);
 			this->checkBox3->TabIndex = 13;
@@ -272,15 +270,15 @@ namespace GUI
 			// 
 			// progressBar1
 			// 
-			this->progressBar1->Location = System::Drawing::Point(24, 727);
+			this->progressBar1->Location = System::Drawing::Point(297, 587);
 			this->progressBar1->Name = L"progressBar1";
-			this->progressBar1->Size = System::Drawing::Size(1000, 41);
+			this->progressBar1->Size = System::Drawing::Size(1024, 41);
 			this->progressBar1->Style = System::Windows::Forms::ProgressBarStyle::Continuous;
 			this->progressBar1->TabIndex = 14;
 			// 
 			// trackBar1
 			// 
-			this->trackBar1->Location = System::Drawing::Point(24, 381);
+			this->trackBar1->Location = System::Drawing::Point(18, 351);
 			this->trackBar1->Maximum = 20;
 			this->trackBar1->Name = L"trackBar1";
 			this->trackBar1->Size = System::Drawing::Size(241, 45);
@@ -293,7 +291,7 @@ namespace GUI
 			this->numericUpDown1->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
 			this->numericUpDown1->DecimalPlaces = 2;
 			this->numericUpDown1->Increment = System::Decimal(gcnew cli::array< System::Int32 >(4) { 5, 0, 0, 131072 });
-			this->numericUpDown1->Location = System::Drawing::Point(190, 354);
+			this->numericUpDown1->Location = System::Drawing::Point(184, 324);
 			this->numericUpDown1->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
 			this->numericUpDown1->Name = L"numericUpDown1";
 			this->numericUpDown1->Size = System::Drawing::Size(75, 21);
@@ -304,7 +302,7 @@ namespace GUI
 			// label3
 			// 
 			this->label3->AutoSize = true;
-			this->label3->Location = System::Drawing::Point(143, 359);
+			this->label3->Location = System::Drawing::Point(137, 329);
 			this->label3->Name = L"label3";
 			this->label3->Size = System::Drawing::Size(35, 12);
 			this->label3->TabIndex = 17;
@@ -313,7 +311,7 @@ namespace GUI
 			// checkBox4
 			// 
 			this->checkBox4->AutoSize = true;
-			this->checkBox4->Location = System::Drawing::Point(100, 433);
+			this->checkBox4->Location = System::Drawing::Point(94, 403);
 			this->checkBox4->Name = L"checkBox4";
 			this->checkBox4->Size = System::Drawing::Size(72, 16);
 			this->checkBox4->TabIndex = 18;
@@ -323,7 +321,7 @@ namespace GUI
 			// 
 			// button5
 			// 
-			this->button5->Location = System::Drawing::Point(42, 497);
+			this->button5->Location = System::Drawing::Point(36, 448);
 			this->button5->Name = L"button5";
 			this->button5->Size = System::Drawing::Size(223, 71);
 			this->button5->TabIndex = 19;
@@ -334,7 +332,7 @@ namespace GUI
 			// 
 			// button6
 			// 
-			this->button6->Location = System::Drawing::Point(42, 595);
+			this->button6->Location = System::Drawing::Point(36, 528);
 			this->button6->Name = L"button6";
 			this->button6->Size = System::Drawing::Size(223, 48);
 			this->button6->TabIndex = 20;
@@ -351,11 +349,54 @@ namespace GUI
 			// 
 			this->saveFileDialog1->Filter = L"Image Files|*.bmp;*.png;*.tif;*.jpg;*.exr|All Files|*.*";
 			// 
+			// checkBox5
+			// 
+			this->checkBox5->AutoSize = true;
+			this->checkBox5->Checked = true;
+			this->checkBox5->CheckState = System::Windows::Forms::CheckState::Checked;
+			this->checkBox5->Location = System::Drawing::Point(94, 599);
+			this->checkBox5->Name = L"checkBox5";
+			this->checkBox5->Size = System::Drawing::Size(66, 16);
+			this->checkBox5->TabIndex = 21;
+			this->checkBox5->Text = L"Preview";
+			this->checkBox5->UseVisualStyleBackColor = true;
+			this->checkBox5->CheckedChanged += gcnew System::EventHandler(this, &MainForm::checkBox5_CheckedChanged);
+			// 
+			// panel1
+			// 
+			this->panel1->AutoScroll = true;
+			this->panel1->Controls->Add(this->pictureBox1);
+			this->panel1->Location = System::Drawing::Point(297, -1);
+			this->panel1->Name = L"panel1";
+			this->panel1->Size = System::Drawing::Size(1024, 576);
+			this->panel1->TabIndex = 22;
+			// 
+			// pictureBox1
+			// 
+			this->pictureBox1->Location = System::Drawing::Point(0, 0);
+			this->pictureBox1->Name = L"pictureBox1";
+			this->pictureBox1->Size = System::Drawing::Size(1024, 576);
+			this->pictureBox1->TabIndex = 0;
+			this->pictureBox1->TabStop = false;
+			// 
+			// Show
+			// 
+			this->Show->Location = System::Drawing::Point(184, 59);
+			this->Show->Name = L"Show";
+			this->Show->Size = System::Drawing::Size(75, 23);
+			this->Show->TabIndex = 23;
+			this->Show->Text = L"Show";
+			this->Show->UseVisualStyleBackColor = true;
+			this->Show->Click += gcnew System::EventHandler(this, &MainForm::Show_Click);
+			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1036, 780);
+			this->ClientSize = System::Drawing::Size(1330, 639);
+			this->Controls->Add(this->Show);
+			this->Controls->Add(this->panel1);
+			this->Controls->Add(this->checkBox5);
 			this->Controls->Add(this->button6);
 			this->Controls->Add(this->button5);
 			this->Controls->Add(this->checkBox4);
@@ -376,13 +417,14 @@ namespace GUI
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->textBox1);
 			this->Controls->Add(this->label1);
-			this->Controls->Add(this->panel1);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			this->MaximizeBox = false;
 			this->Name = L"MainForm";
 			this->Text = L"Denoiser";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar1))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown1))->EndInit();
+			this->panel1->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -390,12 +432,28 @@ namespace GUI
 #pragma endregion
 
 	//delegate void changeText
+	private: System::Void showImage()
+	{
+		cv::Mat img = cv::imread((char*)(void*)Marshal::StringToHGlobalAnsi(paths[0]), cv::IMREAD_UNCHANGED);
+		this->Invoke(gcnew DlgSetPanelSize(this, &MainForm::setPanelSize), gcnew array<System::Object^>{ img.cols, img.rows });
+		fillImageBox(img, imageBox);
+		cv::imshow("view", imageBox);
+	}
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e)
 	{
 		readFile(0);
 		if (!isBatchMode && File::Exists(paths[0]))
 		{
 			textBox4->Text = savePath = Path::GetDirectoryName(paths[0]) + "\\" + Path::GetFileNameWithoutExtension(paths[0]) + "_out" + Path::GetExtension(paths[0]);
+			showImage();
+		}
+	}
+
+	private: System::Void Show_Click(System::Object^  sender, System::EventArgs^  e)
+	{
+		if (!isBatchMode && File::Exists(paths[0]))
+		{
+			showImage();
 		}
 	}
 
@@ -630,7 +688,20 @@ namespace GUI
 
 		return 0;
 	}
-	
+
+	delegate void DlgSetPanelSize(Int32 Width, Int32 Height);
+
+	private: void setPanelSize(Int32 Width, Int32 Height)
+	{
+		float scale = Math::Min(1024.0f / Width, 576.0f / Height);		
+		pictureBox1->Size = Drawing::Size(scale * Width, scale * Height);
+		int x = (int)(0.5 * (panel1->Width - pictureBox1->Width));
+		int y = (int)(0.5 * (panel1->Height - pictureBox1->Height));
+		pictureBox1->Location = Drawing::Point(x, y);
+		cv::resizeWindow("view", scale * Width, scale * Height);
+		//Console::WriteLine(pictureBox1->Size.Width.ToString() + "x" + pictureBox1->Size.Height.ToString());
+	}
+
 	private: bool denoise(String^ beautyPath, String^ albedoPath, String^ normalPath, String^ savePath)
 	{
 		if (!File::Exists(beautyPath))
@@ -657,6 +728,9 @@ namespace GUI
 		{
 			lastW = bet.cols;
 			lastH = bet.rows;
+			rebuild = 1;
+			//Console::WriteLine(panel2->Size.Width.ToString() + "x" + panel2->Size.Height.ToString());
+
 		}
 		Console::WriteLine("depth: " + depth.ToString());
 		Console::WriteLine("size: " + Int32(bet.cols).ToString() + "x" + Int32(bet.rows).ToString());
@@ -694,10 +768,18 @@ namespace GUI
 		bet = denoise_impl(bet, useAlbedo, abd, useNormal, nml, blend, useHDR, rebuild);
 
 		cv::cvtColor(bet, bet, CV_RGBA2BGR);
-
-		fillImageBox(bet, imageBox);
-		cv::imshow("view", imageBox);
-
+		if (doPreview)
+		{
+			if (rebuild)
+			{
+				this->Invoke(gcnew DlgSetPanelSize(this, &MainForm::setPanelSize), gcnew array<System::Object^>{ bet.cols, bet.rows });
+			}
+			
+			fillImageBox(bet, imageBox);
+			cv::imshow("view", imageBox);
+			//Console::WriteLine(panel2->Size.Width.ToString() + "x" + panel2->Size.Height.ToString());
+		}
+		
 		switch (rtype)
 		{
 		case CV_8U:
@@ -856,5 +938,12 @@ namespace GUI
 			label2->Text = "Output Texture";
 		}
 	}
+			 bool doPreview  = 1;
+	private: System::Void checkBox5_CheckedChanged(System::Object^  sender, System::EventArgs^  e)
+	{
+		doPreview = checkBox5->Checked;
+	}
+
 };
 }
+

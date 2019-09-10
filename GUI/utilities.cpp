@@ -66,7 +66,8 @@ float getAlphaTo8U(const cv::Mat &src)
 
 void fillImageBox(const cv::Mat &src, cv::Mat &dst)
 {
-	static float scale = 720 / float(std::max(src.cols, src.rows));
+	//static float scale = 720 / float(std::max(src.cols, src.rows));
+	//resize(dst, dst, cv::Size(720, 720));
 	src.convertTo(dst, CV_8U, getAlphaTo8U(src));
-	resize(dst, dst, cv::Size(floor(scale * src.cols), floor(scale * src.rows)));
+	//resize(dst, dst, cv::Size(floor(scale * src.cols), floor(scale * src.rows)));
 }
