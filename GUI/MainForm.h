@@ -364,12 +364,15 @@ namespace GUI
 			// 
 			// panel1
 			// 
+			this->panel1->AllowDrop = true;
 			this->panel1->AutoScroll = true;
 			this->panel1->Controls->Add(this->pictureBox1);
 			this->panel1->Location = System::Drawing::Point(297, -1);
 			this->panel1->Name = L"panel1";
 			this->panel1->Size = System::Drawing::Size(1024, 576);
 			this->panel1->TabIndex = 22;
+			this->panel1->DragDrop += gcnew System::Windows::Forms::DragEventHandler(this, &MainForm::panel1_DragDrop);
+			this->panel1->DragEnter += gcnew System::Windows::Forms::DragEventHandler(this, &MainForm::panel1_DragEnter);
 			// 
 			// pictureBox1
 			// 
@@ -451,7 +454,7 @@ namespace GUI
 
 	private: System::Void Show_Click(System::Object^  sender, System::EventArgs^  e)
 	{
-		if (!isBatchMode && File::Exists(paths[0]))
+		if (!isBatchMode && File::Exists(paths[0]) && isImage(paths[0]))
 		{
 			showImage();
 		}
@@ -565,6 +568,11 @@ namespace GUI
 		}
 		
 	}
+	private: bool isImage(String^ fileName)
+	{
+		String^ ext = Path::GetExtension(fileName);
+		return (ext == ".png" || ext == ".bmp" || ext == ".exr" || ext == ".tif" || ext == ".jpg");
+	}
 	
 	private: bool batchModeDenoise()
 	{
@@ -588,8 +596,7 @@ namespace GUI
 		Int32 cnt0 = 0;
 		for each (auto file in info->GetFiles())
 		{
-			String^ ext = Path::GetExtension(file->Name);
-			if (ext == ".png" || ext == ".bmp" || ext == ".exr" || ext == ".tif" || ext == ".jpg")
+			if (isImage(file->Name))
 			{
 				//Console::WriteLine(file->Name);
 				inputFiles[cnt0] = (paths[0] + "\\" + file->Name);
@@ -612,9 +619,7 @@ namespace GUI
 			info = gcnew DirectoryInfo(paths[1]);
 			for each (auto file in info->GetFiles())
 			{
-
-				String^ ext = Path::GetExtension(file->Name);
-				if (ext == ".png" || ext == ".bmp" || ext == ".exr" || ext == ".tif" || ext == ".jpg")
+				if (isImage(file->Name))
 				{
 					//Console::WriteLine(file->Name);
 					albedoFiles[cnt1] = (paths[1] + "\\" + file->Name);
@@ -643,9 +648,7 @@ namespace GUI
 			info = gcnew DirectoryInfo(paths[2]);
 			for each (auto file in info->GetFiles())
 			{
-
-				String^ ext = Path::GetExtension(file->Name);
-				if (ext == ".png" || ext == ".bmp" || ext == ".exr" || ext == ".tif" || ext == ".jpg")
+				if (isImage(file->Name))
 				{
 					//Console::WriteLine(file->Name);
 					normalFiles[cnt2] = (paths[2] + "\\" + file->Name);
@@ -944,6 +947,45 @@ namespace GUI
 		doPreview = checkBox5->Checked;
 	}
 
+	private: System::Void panel1_DragDrop(System::Object^  sender, System::Windows::Forms::DragEventArgs^  e)
+	{
+		//Console::WriteLine(((System::Array^)e->Data->GetData(DataFormats::FileDrop))->GetValue(0));
+		String^ path = (String^)((System::Array^)e->Data->GetData(DataFormats::FileDrop))->GetValue(0);
+		if (!isBatchMode)
+		{
+			if (isImage(path) && File::Exists(path))
+			{
+				textBoxes[0]->Text = path;
+				paths[0] = textBoxes[0]->Text;
+				showImage();
+			}
+			else
+			{
+				MessageBox::Show("Unsupported format.", "Error", MessageBoxButtons::OK);
+				Console::WriteLine("Error: Unsupported format.");
+			}
+		}
+		else
+		{
+			if (Directory::Exists(path))
+			{
+				textBoxes[0]->Text = path;
+				paths[0] = textBoxes[0]->Text;
+			}
+		}
+	}
+
+	private: System::Void panel1_DragEnter(System::Object^  sender, System::Windows::Forms::DragEventArgs^  e)
+	{
+		if (e->Data->GetDataPresent(DataFormats::FileDrop))
+		{
+			e->Effect = DragDropEffects::Link;
+		}
+		else
+		{
+			e->Effect = DragDropEffects::None;
+		}
+	}
 };
 }
 
