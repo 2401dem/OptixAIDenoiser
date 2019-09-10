@@ -957,6 +957,7 @@ namespace GUI
 			{
 				textBoxes[0]->Text = path;
 				paths[0] = textBoxes[0]->Text;
+				textBox4->Text = savePath = Path::GetDirectoryName(paths[0]) + "\\" + Path::GetFileNameWithoutExtension(paths[0]) + "_out" + Path::GetExtension(paths[0]);
 				showImage();
 			}
 			else
